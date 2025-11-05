@@ -1,6 +1,11 @@
 import apiClient from './apiClient'
 
 export const transactionsService = {
+    async connection() {
+        const {data} = await apiClient.get('/')
+        return data
+    },
+
     async getAll() {
         const { data } = await apiClient.get('/transactions')
         return data

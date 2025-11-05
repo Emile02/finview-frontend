@@ -1,12 +1,27 @@
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue'
+import { transactionStore } from '@/stores/transaction.store'
+
+const store = transactionStore()
+
+onMounted(() => {
+  store.checkConnection()
+})
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to
-    read the documentation
-  </p>
-</template>
+  <div class="p-4">
+    <h1>Statut de la connexion</h1>
 
-<style scoped></style>
+    <p>
+      Connecté :
+      <strong :style="{ color: store.connected ? 'green' : 'red' }">
+        {{ store.connected ? '✅ Oui' : '❌ Non' }}
+      </strong>
+    </p>
+
+    <p v-if="store.backendMessage">
+      Message du backend : <code>{{ store.backendMessage }}</code>
+    </p>
+  </div>
+</template>
