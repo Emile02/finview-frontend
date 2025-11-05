@@ -24,5 +24,14 @@ export const transactionStore = defineStore('transactions', {
                 this.backendMessage = 'Erreur de connexion'
             }
         },
+        async createTransaction() {
+            try {
+                const res = await transactionsService.create()
+                console.log('Connection response:', res)
+
+            } catch (error) {
+                console.error('Erreur de création au backend', error)
+            }
+        }
     },
 })

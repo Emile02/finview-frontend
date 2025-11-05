@@ -6,6 +6,20 @@ export const transactionsService = {
         return data
     },
 
+    async create() {
+        const data = {
+            "asset": "BTC",
+            "operation": "buy",
+            "amount": 500,
+            "quantity": 0.01,
+            "unit_price": 50000,
+            "currency": "EUR",
+            "date": "2025-10-24T12:00:00",
+            "comment": "Test transaction"
+        }
+        await apiClient.post('/transactions', data)
+    },
+
     async getAll() {
         const { data } = await apiClient.get('/transactions')
         return data

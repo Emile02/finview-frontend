@@ -6,6 +6,7 @@ const store = transactionStore()
 
 onMounted(() => {
   store.checkConnection()
+  store.createTransaction()
 })
 </script>
 
