@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 import {transactionsService} from '@/services/transactions.service'
 
-export const transactionStore = defineStore('transactions', {
+export const useTransactionStore = defineStore('transactions', {
     state: () => ({
         /** @type {{ id: string, asset: string, operation: string, amount: number, quantity: number, unit_price: number, currency: string, date: string }[]} */
         transactions: [],
@@ -9,6 +9,15 @@ export const transactionStore = defineStore('transactions', {
         backendMessage: ''
     }),
     actions: {
+        async deleteTransaction(transactionId) {
+            try {
+                await transactionsService.delete(transactionId)
+                const index = this.transactions.findIndex(t => t.id === transactionId)
+                if (index !== -1) this.transactions.splice(index, 1)
+            } catch (err) {
+                console.error('Erreur suppression:', err)
+            }
+        },
         async fetchTransactions() {
             this.transactions = await transactionsService.getAll()
         },
@@ -34,4 +43,15 @@ export const transactionStore = defineStore('transactions', {
             }
         }
     },
+
+    persist: {
+        enabled: true,
+        strategies: [
+            {
+                storage: localStorage,
+                paths: ['transactions']
+            }
+        ]
+    }
+
 })

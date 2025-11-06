@@ -20,6 +20,10 @@ export const transactionsService = {
         await apiClient.post('/transactions', data)
     },
 
+    async delete(id) {
+        await apiClient.delete('/transactions/' + id)
+    },
+
     async getAll() {
         const { data } = await apiClient.get('/transactions')
         return data

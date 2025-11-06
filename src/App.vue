@@ -1,28 +1,21 @@
 <script setup>
-import { onMounted } from 'vue'
-import { transactionStore } from '@/stores/transaction.store'
+import {computed, onMounted} from 'vue'
+import { useTransactionStore } from '@/stores/transaction.store'
+import TransactionTable from '@/components/ui/TransactionTable.vue'
 
-const store = transactionStore()
+const store = useTransactionStore()
+
+const transactions = computed(() => {
+  return store.transactions
+})
 
 onMounted(() => {
-  store.checkConnection()
-  store.createTransaction()
+  store.fetchTransactions()
 })
 </script>
 
 <template>
   <div class="p-4">
-    <h1>Statut de la connexion</h1>
-
-    <p>
-      Connecté :
-      <strong :style="{ color: store.connected ? 'green' : 'red' }">
-        {{ store.connected ? '✅ Oui' : '❌ Non' }}
-      </strong>
-    </p>
-
-    <p v-if="store.backendMessage">
-      Message du backend : <code>{{ store.backendMessage }}</code>
-    </p>
+    <TransactionTable :transactions="transactions" />
   </div>
 </template>
