@@ -11,11 +11,21 @@
         <button
             type="button"
             class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            @click="show = true"
         >
           Add
         </button>
       </div>
     </div>
+
+    <AddTransactionModalModal :show="show" @close="show = false">
+      <template #title>Confirmation</template>
+      <p>Voulez-vous vraiment supprimer cette transaction ?</p>
+      <template #footer>
+<!--        <Button variant="secondary" @click="show = false">Annuler</Button>
+        <Button variant="danger" @click="confirm">Supprimer</Button>-->
+      </template>
+    </AddTransactionModalModal>
 
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -149,8 +159,14 @@
 </template>
 
 <script setup>
-import { useTransactionStore } from '@/stores/transaction.store'
+import { useTransactionStore } from '@/stores/transaction.store.js'
 const store = useTransactionStore()
+
+import {ref} from "vue";
+
+const show = ref(false)
+import AddTransactionModalModal from './modals/AddTransactionModal.vue'
+
 defineProps({
   transactions: {
     type: Array,

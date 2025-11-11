@@ -1,5 +1,4 @@
-# 🧱 Structure globale de l'app
+# ⚙️ Composants UI MODAL métier
 
-├── AppHeader.vue
-├── AppSidebar.vue
-├── AppFooter.vue
+├── AddNewTransaction.vue
+...

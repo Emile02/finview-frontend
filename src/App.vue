@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted} from 'vue'
 import { useTransactionStore } from '@/stores/transaction.store'
-import TransactionTable from '@/components/ui/TransactionTable.vue'
+import TransactionTable from '@/components/business/TransactionTable.vue'
 
 const store = useTransactionStore()
 
