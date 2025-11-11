@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8000'/* || 'http://localhost:3000/api'*/,
+    baseURL: import.meta.env.VITE_FINVIEW_BACKEND  || 'https://finview-backend.onrender.com',
     headers: {
         'Content-Type': 'application/json'
     }

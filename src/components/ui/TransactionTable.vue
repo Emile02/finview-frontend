@@ -82,8 +82,20 @@
 
             <tbody class="divide-y divide-gray-200 bg-white">
             <tr
+                v-if="transactions.length === 0"
+                class="hover:bg-gray-50"
+            >
+              <td
+                  colspan="9"
+                  class="py-8 text-center text-sm text-gray-500 italic"
+              >
+                No transactions
+              </td>
+            </tr>
+            <tr
                 v-for="(transaction) in transactions"
                 :key="transaction.id"
+                v-else
                 class="hover:bg-gray-50"
             >
               <td
