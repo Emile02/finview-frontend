@@ -1,16 +1,24 @@
 <script setup>
 import {computed, onMounted} from 'vue'
 import { useTransactionStore } from '@/stores/transaction.store'
+import { usePortfolioStore } from '@/stores/portfolio.store'
+
 import TransactionTable from '@/components/business/TransactionTable.vue'
 
-const store = useTransactionStore()
-
+const transactionStore = useTransactionStore()
+const portfolioStore = usePortfolioStore()
 const transactions = computed(() => {
-  return store.transactions
+  return transactionStore.transactions
+})
+
+const portfolio = computed(() => {
+  return portfolioStore.portfolio
 })
 
 onMounted(() => {
-  store.fetchTransactions()
+  transactionStore.fetchTransactions()
+  portfolioStore.getPortfolioValue()
+  portfolioStore.getPortfolioAllocation()
 })
 </script>
 
@@ -18,4 +26,6 @@ onMounted(() => {
   <div class="p-4">
     <TransactionTable :transactions="transactions" />
   </div>
+  Total = {{ portfolio.value }}
+
 </template>
