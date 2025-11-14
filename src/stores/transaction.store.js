@@ -18,6 +18,9 @@ export const useTransactionStore = defineStore('transactions', {
                 console.error('Erreur suppression:', err)
             }
         },
+        async getById(id) {
+            return await transactionsService.getById(id)
+        },
         async fetchTransactions() {
             this.transactions = await transactionsService.getAll()
         },

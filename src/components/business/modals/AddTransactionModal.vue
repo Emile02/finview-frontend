@@ -60,7 +60,7 @@
           @click="close"
           type="button"
       >
-        Annuler
+        Cancel
       </button>
 
       <button
@@ -68,32 +68,67 @@
           @click="submit"
           type="button"
       >
-        Créer
+        {{transactionId ? 'Update' : 'Create'}}
       </button>
     </template>
   </BaseModal>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref, watch} from 'vue'
 import BaseModal from '@/components/ui/modal/BaseModal.vue'
 import { transactionsService } from '@/services/transactions.service'
 
-defineProps({
+import { useTransactionStore } from '@/stores/transaction.store.js'
+const store = useTransactionStore()
+
+const props = defineProps({
   show: Boolean,
+  transactionId: {
+    type: String,
+    default: null,
+  },
 })
 const emits = defineEmits(['close', 'created'])
 
-const form = ref({
+const emptyForm = () => ({
   asset: '',
   operation: 'buy',
   amount: 0,
   quantity: 0,
   unit_price: 0,
   currency: 'USD',
-  date: new Date().toISOString().slice(0, 16), // format datetime-local
+  date: new Date().toISOString().slice(0, 16),
   comment: '',
 })
+
+const form = ref(emptyForm())
+
+watch(
+    () => props.transactionId,
+    async (id) => {
+      if (!id) {
+        form.value = emptyForm()
+        return
+      }
+
+      const transaction = await store.getById(id)
+
+      if (transaction) {
+        form.value = {
+          asset: transaction.asset,
+          operation: transaction.operation,
+          amount: transaction.amount,
+          quantity: transaction.quantity,
+          unit_price: transaction.unit_price,
+          currency: transaction.currency,
+          date: transaction.date?.slice(0, 16),
+          comment: transaction.comment,
+        }
+      }
+    },
+    { immediate: true }
+)
 
 function close() {
   emits('close')
@@ -101,8 +136,14 @@ function close() {
 
 async function submit() {
   try {
-    const res = await transactionsService.create(form.value)
-    emits('created', res)
+    let res
+    if (!props.transactionId) {
+      res = await transactionsService.create(form.value)
+    } else {
+      res = await transactionsService.edit(props.transactionId, form.value)
+    }
+    emits(props.transactionId ? 'updated' : 'created', res)
+
     close()
   } catch (err) {
     console.error('Erreur création transaction', err)

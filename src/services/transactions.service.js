@@ -10,6 +10,10 @@ export const transactionsService = {
         await apiClient.post('/transactions', data)
     },
 
+    async edit(id, data) {
+        await apiClient.put('/transactions/' + id, data)
+    },
+
     async delete(id) {
         await apiClient.delete('/transactions/' + id)
     },

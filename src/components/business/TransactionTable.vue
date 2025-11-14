@@ -11,7 +11,7 @@
         <button
             type="button"
             class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            @click="show = true"
+            @click="createTransaction"
         >
           Add
         </button>
@@ -20,6 +20,7 @@
 
     <AddTransactionModal
         :show="show"
+        :transactionId="editedTransaction"
         @close="show = false"
     />
 
@@ -136,6 +137,7 @@
                   class="py-2 pr-4 pl-3 space-x-2 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
               >
                 <a
+                    @click="editTransaction(transaction.id)"
                     href="#"
                     class="text-indigo-600 hover:text-indigo-900"
                 >Edit<span class="sr-only">, {{ transaction.asset }}</span></a>
@@ -161,6 +163,8 @@ const store = useTransactionStore()
 import {ref} from "vue";
 
 const show = ref(false)
+const editedTransaction = ref(null)
+
 import AddTransactionModal from './modals/AddTransactionModal.vue'
 
 defineProps({
@@ -179,6 +183,16 @@ function formatCurrency(value, currency = "EUR") {
 
 function deleteTransaction(transactionId) {
   store.deleteTransaction(transactionId)
+}
+
+function editTransaction(transactionId) {
+  show.value = true
+  editedTransaction.value = transactionId
+}
+
+function createTransaction() {
+  show.value = true
+  editedTransaction.value = null
 }
 
 function formatDate(dateStr) {
