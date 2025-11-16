@@ -24,10 +24,10 @@ onMounted(() => {
 </script>
 
 <template>
-<!--  <UserDashboard/>-->
-  <div class="p-4">
+  <UserDashboard :transactions="transactions"/>
+<!--  <div class="p-4">
     <TransactionTable :transactions="transactions" />
   </div>
-  Total = {{ portfolio.value }}
+  Total = {{ portfolio.value }}-->
 
 </template>
