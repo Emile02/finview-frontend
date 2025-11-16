@@ -4,6 +4,7 @@ import { useTransactionStore } from '@/stores/transaction.store'
 import { usePortfolioStore } from '@/stores/portfolio.store'
 
 import TransactionTable from '@/components/business/TransactionTable.vue'
+import UserDashboard from "@/components/layout/UserDashboard.vue"
 
 const transactionStore = useTransactionStore()
 const portfolioStore = usePortfolioStore()
@@ -23,6 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
+<!--  <UserDashboard/>-->
   <div class="p-4">
     <TransactionTable :transactions="transactions" />
   </div>

@@ -7,11 +7,11 @@ export const transactionsService = {
     },
 
     async create(data) {
-        await apiClient.post('/transactions', data)
+        return await apiClient.post('/transactions', data)
     },
 
     async edit(id, data) {
-        await apiClient.put('/transactions/' + id, data)
+        return await apiClient.put('/transactions/' + id, data)
     },
 
     async delete(id) {

@@ -79,6 +79,7 @@ import {ref, watch} from 'vue'
 import BaseModal from '@/components/ui/modal/BaseModal.vue'
 import { transactionsService } from '@/services/transactions.service'
 
+
 import { useTransactionStore } from '@/stores/transaction.store.js'
 const store = useTransactionStore()
 
@@ -89,7 +90,7 @@ const props = defineProps({
     default: null,
   },
 })
-const emits = defineEmits(['close', 'created'])
+const emits = defineEmits(['close', 'created', 'updated'])
 
 const emptyForm = () => ({
   asset: '',
@@ -138,9 +139,9 @@ async function submit() {
   try {
     let res
     if (!props.transactionId) {
-      res = await transactionsService.create(form.value)
+      res = await store.createTransaction(form.value)
     } else {
-      res = await transactionsService.edit(props.transactionId, form.value)
+      res = await store.edit(props.transactionId, form.value)
     }
     emits(props.transactionId ? 'updated' : 'created', res)
 

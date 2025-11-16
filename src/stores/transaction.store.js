@@ -14,6 +14,7 @@ export const useTransactionStore = defineStore('transactions', {
                 await transactionsService.delete(transactionId)
                 const index = this.transactions.findIndex(t => t.id === transactionId)
                 if (index !== -1) this.transactions.splice(index, 1)
+                await this.fetchTransactions()
             } catch (err) {
                 console.error('Erreur suppression:', err)
             }
@@ -36,11 +37,21 @@ export const useTransactionStore = defineStore('transactions', {
                 this.backendMessage = 'Erreur de connexion'
             }
         },
-        async createTransaction() {
+        async createTransaction(formValues) {
             try {
-                const res = await transactionsService.create()
-                console.log('Connection response:', res)
-
+                const {data} = await transactionsService.create(formValues)
+                this.transactions.push(data)
+            } catch (error) {
+                console.error('Erreur de création au backend', error)
+            }
+        },
+        async edit(id, formValues) {
+            try {
+                const {data} = await transactionsService.edit(id, formValues)
+                const index = this.transactions.findIndex(t => t.id === id)
+                if (index !== -1) {
+                    this.transactions[index] = data
+                }
             } catch (error) {
                 console.error('Erreur de création au backend', error)
             }
