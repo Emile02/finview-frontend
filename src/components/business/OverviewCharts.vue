@@ -1,5 +1,5 @@
 <template>
-  <div ref="chartRef" class="w-full h-80"></div>
+  <div ref="chartRef" class="w-full h-80"/>
 </template>
 
 <script setup>
@@ -24,8 +24,8 @@ onMounted(() => {
       {
         name: 'Total',
         type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
+        radius: ['60%', '70%'],
+        avoidLabelOverlap: true,
         padAngle: 5,
         itemStyle: {
           borderRadius: 10
