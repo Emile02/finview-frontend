@@ -1,10 +1,10 @@
-<script setup>
+<!--<script setup>
 import {computed, onMounted} from 'vue'
 import { useTransactionStore } from '@/stores/transaction.store'
 import { usePortfolioStore } from '@/stores/portfolio.store'
 
 import TransactionTable from '@/components/business/TransactionTable.vue'
-import UserDashboard from "@/components/layout/UserDashboard.vue"
+import UserDashboard from "@/views/UserDashboard.vue"
 
 const transactionStore = useTransactionStore()
 const portfolioStore = usePortfolioStore()
@@ -25,9 +25,21 @@ onMounted(() => {
 
 <template>
   <UserDashboard :transactions="transactions"/>
-<!--  <div class="p-4">
+&lt;!&ndash;  <div class="p-4">
     <TransactionTable :transactions="transactions" />
   </div>
-  Total = {{ portfolio.value }}-->
+  Total = {{ portfolio.value }}&ndash;&gt;
 
+</template>-->
+
+<template>
+  <router-view />
 </template>
+
+<script setup>
+</script>
+
+<style>
+/* global styles if needed */
+</style>
+
