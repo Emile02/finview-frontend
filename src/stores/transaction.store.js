@@ -38,22 +38,14 @@ export const useTransactionStore = defineStore('transactions', {
             }
         },
         async createTransaction(formValues) {
-            try {
-                const {data} = await transactionsService.create(formValues)
-                this.transactions.push(data)
-            } catch (error) {
-                console.error('Erreur de création au backend', error)
-            }
+            const {data} = await transactionsService.create(formValues)
+            this.transactions.push(data)
         },
         async edit(id, formValues) {
-            try {
-                const {data} = await transactionsService.edit(id, formValues)
-                const index = this.transactions.findIndex(t => t.id === id)
-                if (index !== -1) {
-                    this.transactions[index] = data
-                }
-            } catch (error) {
-                console.error('Erreur de création au backend', error)
+            const {data} = await transactionsService.edit(id, formValues)
+            const index = this.transactions.findIndex(t => t.id === id)
+            if (index !== -1) {
+                this.transactions[index] = data
             }
         }
     },
