@@ -53,6 +53,14 @@
         <textarea v-model="form.comment" class="w-full border rounded-md p-2" placeholder="Notes..."></textarea>
       </div>
     </form>
+    <BaseToast
+        v-if="showErrorToast"
+        variant="alert"
+        type="danger"
+        title="Erreur lors de la création de la transaction"
+        :description="error"
+        @close="showErrorToast =  false"
+    />
 
     <template #footer>
       <button
@@ -72,18 +80,20 @@
       </button>
     </template>
   </BaseModal>
+
 </template>
 
 <script setup>
 import {ref, watch} from 'vue'
 import BaseModal from '@/components/ui/modal/BaseModal.vue'
+import BaseToast from '@/components/ui/BaseToast.vue'
 
 
 import { useTransactionStore } from '@/stores/transaction.store.js'
 const store = useTransactionStore()
 
 const error = ref(null)
-
+const showErrorToast = ref(false)
 const props = defineProps({
   show: Boolean,
   transactionId: {
@@ -133,6 +143,8 @@ watch(
 )
 
 function close() {
+  showErrorToast.value = false
+  error.value = null
   emits('close')
 }
 
@@ -147,7 +159,7 @@ async function submit() {
       emits(props.transactionId ? 'updated' : 'created', res)
     } catch (err) {
       error.value = err.message
-      console.error('Erreur création transaction', err)
+      showErrorToast.value = true
     }
 }
 </script>
