@@ -39,7 +39,9 @@ export const useTransactionStore = defineStore('transactions', {
         },
         async createTransaction(formValues) {
             const {data} = await transactionsService.create(formValues)
-            this.transactions.push(data)
+            if (data) {
+                this.transactions.push(data)
+            }
         },
         async edit(id, formValues) {
             const {data} = await transactionsService.edit(id, formValues)

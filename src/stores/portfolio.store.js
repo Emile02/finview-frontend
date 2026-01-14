@@ -13,7 +13,6 @@ export const usePortfolioStore = defineStore('portfolio', {
         },
         async getPortfolioAllocation() {
             const data = await portfolioService.getAllocation()
-            console.log('data', data)
             this.portfolio.allocation = data.allocation
             this.portfolio.total_value = data.total_value
         }

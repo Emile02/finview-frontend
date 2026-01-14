@@ -4,14 +4,12 @@
 
     <form @submit.prevent="submit" class="flex flex-col gap-3">
       <div>
-        <label class="block text-sm font-medium">Asset</label>
-        <input
-            v-model="form.asset"
-            type="text"
-            class="w-full border rounded-md p-2"
-            placeholder="Ex: AAPL, BTC..."
-            required
-        />
+        <div>
+          <label class="block text-sm font-medium">Asset</label>
+          <select v-model="form.asset_symbol" class="w-full border rounded-md p-2" required>
+            <option v-for="asset in assets" :key="asset.updated_at" :value="asset.symbol">{{ asset.name }} - {{ asset.symbol }}</option>
+          </select>
+        </div>
       </div>
 
       <div>
@@ -84,13 +82,20 @@
 </template>
 
 <script setup>
-import {ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import BaseModal from '@/components/ui/modal/BaseModal.vue'
 import BaseToast from '@/components/ui/BaseToast.vue'
+import {storeToRefs} from "pinia";
 
 
-import { useTransactionStore } from '@/stores/transaction.store.js'
-const store = useTransactionStore()
+import { useTransactionStore, useAssetsStore } from '@/stores/'
+const transactionStore = useTransactionStore()
+const assetsStore = useAssetsStore()
+const { assets } = storeToRefs(assetsStore)
+
+onMounted(() => {
+  assetsStore.getAllAssets()
+})
 
 const error = ref(null)
 const showErrorToast = ref(false)
@@ -104,7 +109,7 @@ const props = defineProps({
 const emits = defineEmits(['close', 'created', 'updated'])
 
 const emptyForm = () => ({
-  asset: '',
+  asset_symbol: null,
   operation: 'buy',
   amount: 0,
   quantity: 0,
@@ -124,11 +129,11 @@ watch(
         return
       }
 
-      const transaction = await store.getById(id)
+      const transaction = await transactionStore.getById(id)
 
       if (transaction) {
         form.value = {
-          asset: transaction.asset,
+          asset_symbol: transaction.asset_symbol,
           operation: transaction.operation,
           amount: transaction.amount,
           quantity: transaction.quantity,
@@ -152,10 +157,11 @@ async function submit() {
     let res
     try {
       if (!props.transactionId) {
-        res = await store.createTransaction(form.value)
+        res = await transactionStore.createTransaction(form.value)
       } else {
-        res = await store.edit(props.transactionId, form.value)
+        res = await transactionStore.edit(props.transactionId, form.value)
       }
+      close()
       emits(props.transactionId ? 'updated' : 'created', res)
     } catch (err) {
       error.value = err.message
