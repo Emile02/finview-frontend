@@ -162,6 +162,7 @@ async function submit() {
         res = await transactionStore.edit(props.transactionId, form.value)
       }
       close()
+      form.value = emptyForm()
       emits(props.transactionId ? 'updated' : 'created', res)
     } catch (err) {
       error.value = err.message

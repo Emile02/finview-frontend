@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import {transactionsService} from '@/services/transactions.service'
-
+import { usePortfolioStore } from '@/stores/portfolio.store'
 export const useTransactionStore = defineStore('transactions', {
     state: () => ({
         /** @type {{ id: string, asset: string, operation: string, amount: number, quantity: number, unit_price: number, currency: string, date: string }[]} */
@@ -14,6 +14,7 @@ export const useTransactionStore = defineStore('transactions', {
                 await transactionsService.delete(transactionId)
                 const index = this.transactions.findIndex(t => t.id === transactionId)
                 if (index !== -1) this.transactions.splice(index, 1)
+                await this.reloadPortfolio()
                 await this.fetchTransactions()
             } catch (err) {
                 console.error('Erreur suppression:', err)
@@ -22,8 +23,21 @@ export const useTransactionStore = defineStore('transactions', {
         async getById(id) {
             return await transactionsService.getById(id)
         },
+        async reloadPortfolio() {
+            const portfolioStore = usePortfolioStore()
+            await portfolioStore.getPortfolioValue()
+            await portfolioStore.getPortfolioAllocation()
+        },
         async fetchTransactions() {
-            this.transactions = await transactionsService.getAll()
+            const res = await transactionsService.getAll()
+
+            if (Array.isArray(res)) {
+                this.transactions = res
+            } else if (Array.isArray(res?.data)) {
+                this.transactions = res.data
+            } else {
+                this.transactions = []
+            }
         },
         async checkConnection() {
             try {
@@ -39,8 +53,12 @@ export const useTransactionStore = defineStore('transactions', {
         },
         async createTransaction(formValues) {
             const {data} = await transactionsService.create(formValues)
+            if (!Array.isArray(this.transactions)) {
+                this.transactions = []
+            }
             if (data) {
                 this.transactions.push(data)
+                await this.reloadPortfolio()
             }
         },
         async edit(id, formValues) {
@@ -48,6 +66,7 @@ export const useTransactionStore = defineStore('transactions', {
             const index = this.transactions.findIndex(t => t.id === id)
             if (index !== -1) {
                 this.transactions[index] = data
+                this.reloadPortfolio()
             }
         }
     },

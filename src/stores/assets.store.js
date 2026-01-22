@@ -8,9 +8,7 @@ export const useAssetsStore = defineStore('assets', {
     }),
     actions: {
         async getAllAssets() {
-            const data = await assetsService.getAll()
-            console.log('data', data)
-            this.assets = data
+            this.assets = await assetsService.getAll()
         },
     }
 })
